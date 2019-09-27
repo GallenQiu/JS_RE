@@ -8,11 +8,11 @@
 ### 2、把该字符串用一个叫做"MD5"的方法加密一下
     该加密过程存在的js文件名（通过查找sign可以找到）,这里叫他 主js：http://www.ddky.com/D998449F20509FA6BC4A/js/ddkyutils.js?ddkycache=0fdfc085618a1365dea0610482de0424
     关键加密段：（在上面的js中查找sign可找到）
- '''
+```
     for (var f = t.get("method") + p + r, y = MD5(f), v = e + "?sign=" + y, k = 0; k < l.length; k++)
     (t.get(l[k]) + "").indexOf("+") >= 0 || -1 != (t.get(l[k]) + "").indexOf("&") ? v += "&" + l[k] + "=" + encodeURIComponent(t.get(l[k])) : "pageUrl" == l[k] ? v += "&" + l[k] + "=" + encodeURIComponent(t.get(l[k])) : v += "&" + l[k] + "=" + t.get(l[k]);
     return v
-            '''
+```
             
     MD5 方法存在的js文件（上述js段点击可找到），这里叫他 MD5js
 
