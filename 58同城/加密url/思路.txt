@@ -1,0 +1,63 @@
+网址url加密字段：PGTID
+
+加密的流程：
+    1、js生成带请求信息的"_trackURL"（类似于一个字典）
+'
+_trackURL="{'cate':'1,8','cateBusiness':'1,8','area':'4,1855','pagetype':'list','pagesize':135,'pagenum':1,'jiage':'','is_real':false,'is_biz':false,'infoSource':0,'GA_pageview':'/house/zufang/list/'}"
+'
+    2、从_trackURL中提出三个信息（1、提出'pagetype'的值赋值给f参数。2、提出'cate'的值赋值给y。3、提出'area'的值赋值给G。）
+解读：f参数是一个常量"list";y参数的形式是"(1,8)",1代表"租房信息",8代表"整租";G参数的形式是"(4,1855)",4代表"深圳"，1855代表"布吉区"
+
+    3、把f、y、G传入一个叫'e.getGTID'的函数进行加密，返回的值就是PGTID
+
+
+疑问：关键的加密操作函数在哪里？长啥样？怎么找？
+    怎么找？：搜索"GTID"就找到啦，多试试。
+    最核心的执行加密操作的函数叫"bindAddGTIDtoURL",位置在Referrer4.js中。
+    解读：从主函数中提取带网页请求的信息，再调用"getGTID"进行加密，生成url
+
+'''
+bindAddGTIDtoURL: function() {
+                var b = this
+                  , a = this.baseInfo;
+                c.$ && e.bindElem("a", "click", function(c) {
+                    if ("NO" == b.filterList(a.curURL) && -1 != a.curURL.indexOf(".58.com") && (c = $(this).attr("href") || "#",
+                    -1 == c.indexOf("javascript:") && "#" != c.substring(0, 1) && "NO" == b.filterList(c) && ("/" == c.substring(0, 1) || -1 != c.indexOf(".58.com"))))
+                        if (c.match(/[\?&]ClickID=\d*/))
+                            $(this).attr("href", c.replace(/ClickID=\d*/, "ClickID=" + a.ClickID));
+                        else {
+                            var e = c.indexOf("?");
+                            -1 != e && -1 != c.substring(e).indexOf("statmark=t") && -1 != c.substring(e).indexOf("#") ? (e = c.indexOf("statmark=t"),
+                            $(this).attr("href", c.substring(0, e + 10) + "&PGTID=" + a.GTID + "&ClickID=" + a.ClickID + c.substring(e + 10))) : $(this).attr("href", c.trim() + (-1 == e ? "?" : "&") + "PGTID=" + a.GTID + "&ClickID=" + a.ClickID)
+                        }
+                }, b, a)
+            },
+'''
+
+疑问：加密函数长啥样子？
+'''
+getGTID: function(b, a, d) {
+                function c(a, b, d) {
+                    a = ("" + a).length < b ? (Array(b + 1).join("0") + a).slice(-b) : "" + a;
+                    return -1 == d ? a : a.substring(0, d) + "-" + a.substring(d)
+                }
+                var e = {
+                    home: "1",
+                    index: "2",
+                    list: "3",
+                    detail: "4",
+                    post: "5",
+                    special: "6"
+                };
+                b = e[b] ? parseInt(e[b]).toString(16) : 0;
+                a = a.split(",");
+                a = a[a.length - 1];
+                a = parseInt(a) ? parseInt(a).toString(16) : 0;
+                d = d.split(",");
+                d = d[d.length - 1];
+                d = parseInt(d) ? parseInt(d).toString(16) : 0;
+                e = (13).toString(16);
+                return "llpccccc-tttt-txxx-xxxx-xxxxxxxxxxxx".replace(/x/g, function(a) {
+                    return (16 * Math.random() | 0).toString(16)
+                }).replace(/ccccc/, c(a, 5, -1)).replace(/tttt-t/, c(d, 5, 4)).replace(/p/, c(b, 1, -1)).replace(/ll/, c(e, 2, -1))
+            },'''
