@@ -6,6 +6,7 @@ from quyu import quyu
 import execjs,requests
 class Crawl_58:
     def __init__(self):
+        #省份城市列表
         self.cityList = {
             "安徽": {
                 "合肥": "hf|837", "芜湖": "wuhu|2045", "蚌埠": "bengbu|3470", "阜阳": "fy|2325", "淮南": "hn|2319",
@@ -304,12 +305,13 @@ class Crawl_58:
         self.cate_code=self.cate[self.cate_name][0]
         self.cate_sx=self.cate[self.cate_name][1]
 
+    #GTID参数的加密模块
     def parse(self):
         f = 'list'
         y = "1,{}".format(self.cate_code) # cate房子类型code
         G = "{},{}".format(self.city_code,self.quyu_code) # area地区code
-        # N = e.getGTID(f, y, G)
 
+        #加密的js段
         jscode='''
         p=''
         h=''
@@ -350,6 +352,7 @@ class Crawl_58:
         print(N)
         return N
 
+    # 请求页面模块
     def req(self):
         code=self.parse()
         url='https://sz.58.com/{}/{}/?PGTID={}'.format(self.quyu_sx,self.cate_sx,code)

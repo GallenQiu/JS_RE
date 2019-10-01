@@ -238,6 +238,8 @@ cityList = {
 }
 from bs4 import BeautifulSoup
 import requests,time
+
+#区域编码生成
 def quyu(province,city):
     city_sx=cityList[province][city].split("|")[0]
     url='https://{}.58.com/pinpaigongyu'.format(city_sx)
